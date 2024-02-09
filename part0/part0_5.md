@@ -1,16 +1,10 @@
-<h3>0.4: New note diagram</h3>
+<h3>0.5: Single page app diagram</h3>
 ```mermaid
 sequenceDiagram
     participant browser
     participant server
-
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-    activate server
-    Note right of server: The server saves the note sent by the browser
-    server->>browser: HTTP status code 302 url redirect to /notes
-    deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
     activate server
     server-->>browser: HTML document
     deactivate server
@@ -20,7 +14,7 @@ sequenceDiagram
     server-->>browser: the css file
     deactivate server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     activate server
     server-->>browser: the JavaScript file
     deactivate server
