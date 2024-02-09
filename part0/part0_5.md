@@ -1,5 +1,5 @@
 ```mermaid
-<h3>0.5: Single page app diagram</h3>
+title 0.5: Single page app diagram
 sequenceDiagram
     participant browser
     participant server

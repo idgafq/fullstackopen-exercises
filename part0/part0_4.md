@@ -1,5 +1,5 @@
 ```mermaid
-<h3>0.4: New note diagram</h3>
+title 0.4: New note diagram
 sequenceDiagram
     participant browser
     participant server
