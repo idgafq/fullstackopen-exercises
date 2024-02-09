@@ -1,6 +1,6 @@
 ```mermaid
-title "0.6: New note in Single page app diagram"
 sequenceDiagram
+    title "0.6: New note in Single page app diagram"
     participant browser
     participant server
     
