@@ -1,6 +1,6 @@
 ```mermaid
 sequenceDiagram
-    title "0.4: New note diagram"
+    title 0.4: New note diagram
     participant browser
     participant server
 

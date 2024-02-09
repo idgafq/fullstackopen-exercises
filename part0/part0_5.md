@@ -1,6 +1,6 @@
 ```mermaid
 sequenceDiagram
-    title "0.5: Single page app diagram"
+    title 0.5: Single page app diagram
     participant browser
     participant server
     
