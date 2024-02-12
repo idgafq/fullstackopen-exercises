@@ -11,7 +11,7 @@ const App = () => {
       name: 'State of a component', exercises: 14
     }
   ]
-
+  
   return (
     <div>
       <Header course={course} />
@@ -27,10 +27,20 @@ const Header = (props) => {
   )
 }
 
+const Part = (props) => {
+  return (
+    <p>{props.name} {props.exercises}</p>
+  )
+}
+
 const Content = (props) => {
-  const component = []
-  props.content.forEach((part) => (component.push(<p>{part.name} {part.exercises}</p>)))
-  return component
+  return (
+    <div>
+      <Part name={props.content[0].name} exercises={props.content[0].exercises} />
+      <Part name={props.content[1].name} exercises={props.content[1].exercises} />
+      <Part name={props.content[2].name} exercises={props.content[2].exercises} />
+    </div>
+  )
 }
 
 const Total = (props) => {
