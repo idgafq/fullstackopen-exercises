@@ -24,6 +24,14 @@ const App = () => {
       <AButton handleClick={() => addGood()} text='good' />
       <AButton handleClick={() => addNeutral()} text='neutral' />
       <AButton handleClick={() => addBad()} text='bad' />
+      <Statistics good={good} neutral={neutral} bad={bad} />
+    </div>
+  )
+}
+
+const Statistics = ({ good, neutral, bad }) => {
+  return (
+    <div>
       <h1>statistics</h1>
       <Display value={good} text='good' />
       <Display value={neutral} text='neutral' />
