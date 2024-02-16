@@ -41,12 +41,16 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
       <h1>statistics</h1>
-      <StatisticLine value={good} text='good' />
-      <StatisticLine value={neutral} text='neutral' />
-      <StatisticLine value={bad} text='bad' />
-      <StatisticLine value={good + neutral + bad} text='all' />
-      <StatisticLine value={(good - bad) / (good + neutral + bad)} text='average' />
-      <StatisticLinePercent value={good / (good + neutral + bad) * 100} text='positive' />
+      <table>
+        <tbody>
+          <StatisticLine value={good} text='good' />
+          <StatisticLine value={neutral} text='neutral' />
+          <StatisticLine value={bad} text='bad' />
+          <StatisticLine value={good + neutral + bad} text='all' />
+          <StatisticLine value={(good - bad) / (good + neutral + bad)} text='average' />
+          <StatisticLinePercent value={good / (good + neutral + bad) * 100} text='positive' />
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -57,8 +61,18 @@ const Button = ({ handleClick, text }) => (
   </button>
 )
 
-const StatisticLine = ({ value, text }) => <div>{text} {value}</div>
+const StatisticLine = ({ value, text }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+)
 
-const StatisticLinePercent = ({ value, text }) => <div>{text} {value} %</div>
+const StatisticLinePercent = ({ value, text }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value} %</td>
+  </tr>
+)
 
 export default App
