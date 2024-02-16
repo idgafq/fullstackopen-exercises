@@ -25,9 +25,12 @@ const App = () => {
       <AButton handleClick={() => addNeutral()} text='neutral' />
       <AButton handleClick={() => addBad()} text='bad' />
       <h1>statistics</h1>
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
+      <Display value={good} text='good' />
+      <Display value={neutral} text='neutral' />
+      <Display value={bad} text='bad' />
+      <Display value={good + neutral + bad} text='all' />
+      <Display value={(good - bad) / (good + neutral + bad)} text='average' />
+      <PercentDisplay value={good / (good + neutral + bad) * 100} text='positive' />
     </div>
   )
 }
@@ -37,5 +40,9 @@ const AButton = ({ handleClick, text }) => (
     {text}
   </button>
 )
+
+const Display = ({ value, text }) => <div>{text} {value}</div>
+
+const PercentDisplay = ({ value, text }) => <div>{text} {value} %</div>
 
 export default App
