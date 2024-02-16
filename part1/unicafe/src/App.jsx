@@ -21,9 +21,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <AButton handleClick={() => addGood()} text='good' />
-      <AButton handleClick={() => addNeutral()} text='neutral' />
-      <AButton handleClick={() => addBad()} text='bad' />
+      <Button handleClick={() => addGood()} text='good' />
+      <Button handleClick={() => addNeutral()} text='neutral' />
+      <Button handleClick={() => addBad()} text='bad' />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
@@ -41,24 +41,24 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
       <h1>statistics</h1>
-      <Display value={good} text='good' />
-      <Display value={neutral} text='neutral' />
-      <Display value={bad} text='bad' />
-      <Display value={good + neutral + bad} text='all' />
-      <Display value={(good - bad) / (good + neutral + bad)} text='average' />
-      <PercentDisplay value={good / (good + neutral + bad) * 100} text='positive' />
+      <StatisticLine value={good} text='good' />
+      <StatisticLine value={neutral} text='neutral' />
+      <StatisticLine value={bad} text='bad' />
+      <StatisticLine value={good + neutral + bad} text='all' />
+      <StatisticLine value={(good - bad) / (good + neutral + bad)} text='average' />
+      <StatisticLinePercent value={good / (good + neutral + bad) * 100} text='positive' />
     </div>
   )
 }
 
-const AButton = ({ handleClick, text }) => (
+const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>
     {text}
   </button>
 )
 
-const Display = ({ value, text }) => <div>{text} {value}</div>
+const StatisticLine = ({ value, text }) => <div>{text} {value}</div>
 
-const PercentDisplay = ({ value, text }) => <div>{text} {value} %</div>
+const StatisticLinePercent = ({ value, text }) => <div>{text} {value} %</div>
 
 export default App
