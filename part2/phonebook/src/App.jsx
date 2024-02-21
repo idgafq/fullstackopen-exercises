@@ -31,16 +31,15 @@ const App = () => {
       if (window.confirm(`${samePerson.name} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(changedPerson.id, changedPerson)
-          .then((res) => setPersons(persons.map((p) => p.id !== changedPerson.id ? p : res)))
+          .then((res) => setPersons(persons.map((p) => p.id !== res.id ? p : res)))
         setNewName('')
         setNewNumber('')
       }
       return
     }
     
-    const newPerson = {name: newName, number: newNumber}
     personService
-      .create(newPerson)
+      .create({name: newName, number: newNumber})
       .then((addedPerson) => setPersons(persons.concat(addedPerson)))
       .catch((err) => console.log(err))
     setNewName('')
