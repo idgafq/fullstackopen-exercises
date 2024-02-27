@@ -10,6 +10,7 @@ import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([])
+  const [filteredPersons, setFilteredPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
@@ -20,15 +21,23 @@ const App = () => {
     personService
       .getAll()
       .then((data) => {
-        setPersons(data)
-        displayMessage({ message: `Program initializedd`, delay: 5000 })
+        if (data) {
+          setPersons(data)
+          displayMessage({ message: `Program initializedd`, delay: 5000 })
+        } else {
+          displayMessage({ message: 'No data received', delay: 5000})
+        }
       })
       .catch((err) => console.log(err))
   }, [])
 
-  const personsToShow = (nameFilter === '') ? persons : persons.filter((person) => {
-    return person.name.toLowerCase().includes(nameFilter.toLowerCase())
-  })
+  useEffect(() => {
+    if (persons.length !== 0) {
+      setFilteredPersons(!nameFilter ? persons : persons.filter((person) => {
+        return person.name.toLowerCase().includes(nameFilter.toLowerCase())
+      }))
+    }
+  }, [nameFilter, persons])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -41,6 +50,7 @@ const App = () => {
           .then((data) => {
             setPersons(persons.map((p) => p.id !== data.id ? p : data))
             displayMessage({ message: `Changed ${data.name}'s number to ${data.number}`, delay: 5000 })
+          .catch((err) => console.log(err))
           })
         setNewName('')
         setNewNumber('')
@@ -89,7 +99,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} isError={gotError} />
-      <Filter name='name' filter={nameFilter} setFilter={setNameFilter} />
+      <Filter name='name filter' filter={nameFilter} setFilter={setNameFilter} />
 
       <h3>Add a new</h3>
       <NewPersonForm
@@ -98,7 +108,7 @@ const App = () => {
 
       <h3>Numbers</h3>
       <ul style={{ listStyle:'none', paddingLeft:0 }}>
-        {personsToShow
+        {filteredPersons
           .map((person) =>
             <Person key={person.id} person={person} remove={() => removePerson(person.id)} />)
         }
