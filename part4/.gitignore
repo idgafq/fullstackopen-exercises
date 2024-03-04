@@ -1,3 +1,7 @@
 node_modules
 bloglist-frontend
+requests/create_user.rest
+requests/login.rest
+requests/post_blog.rest
+requests/delete_blog.rest
 .env

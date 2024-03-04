@@ -2,12 +2,24 @@ const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+let token = undefined
 
 beforeEach(async () => {
+	await User.deleteMany({})
+	const passwordHash = await bcrypt.hash('secret', 10)
+	const user = new User({ username: 'root', passwordHash })
+	await user.save()
+	const response = await api
+		.post('/api/login')
+		.send({ username: 'root', password: 'secret' })
+	token = response.body.token
+
 	await Blog.deleteMany({})
 	const blogObjects = helper.initalBlogs.map((blog) => new Blog(blog))
 	const promiseArray = blogObjects.map((blogObject) => blogObject.save())
@@ -35,6 +47,7 @@ describe('post validations', () => {
 	test('single blog post', async () => {
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
 			.send(helper.oneBlog)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
@@ -54,6 +67,7 @@ describe('post validations', () => {
 		}
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
 			.send(noIdBlog)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
@@ -71,6 +85,7 @@ describe('post validations', () => {
 		}
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
 			.send(noTitleBlog)
 			.expect(400)
 		const blogsAfter = await helper.blogsInDb()
@@ -85,8 +100,18 @@ describe('post validations', () => {
 		}
 		await api
 			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
 			.send(noUrlBlog)
 			.expect(400)
+		const blogsAfter = await helper.blogsInDb()
+		assert.strictEqual(blogsAfter.length, helper.initalBlogs.length)
+	})
+
+	test('post with no token res 401', async () => {
+		await api
+			.post('/api/blogs')
+			.send(helper.oneBlog)
+			.expect(401)
 		const blogsAfter = await helper.blogsInDb()
 		assert.strictEqual(blogsAfter.length, helper.initalBlogs.length)
 	})
