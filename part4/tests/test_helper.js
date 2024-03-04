@@ -43,10 +43,16 @@ const oneBlog = {
 	url: 'https://url.com/',
 	likes: 999
 }
+const nonExistingId = async () => {
+	const note = new Blog(oneBlog)
+	await note.save()
+	await note.deleteOne()
+	return note._id.toString()
+}
 
 const blogsInDb = async () => {
 	const blogs = await Blog.find({})
 	return blogs.map((blog) => blog.toJSON())
 }
 
-module.exports = { initalBlogs, oneBlog, blogsInDb }
+module.exports = { initalBlogs, oneBlog, nonExistingId, blogsInDb }
