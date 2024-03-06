@@ -39,7 +39,6 @@ blogsRouter.post('/', userExtractor, async (req, res, next) => {
 		user.blogs = user.blogs.concat(savedBlog._id)
 		await user.save()
 	} catch (exception) {
-		res.status(400).end()
 		next(exception)
 		return
 	}
@@ -51,6 +50,9 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
 		return res.status(401).json({ error: 'invalid token' })
 	}
 	const blog = await Blog.findById(req.params.id)
+	if (!blog) {
+		return res.status(404).json({ error: 'cannot find blog with matching id' })
+	}
 	if (blog.user.toString() === req.user.toString()) {
 		await blog.deleteOne()
 		return res.status(204).end()
@@ -72,7 +74,6 @@ blogsRouter.put('/:id', async (req, res, next) => {
 	try {
 		updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
 	} catch (exception) {
-		res.status(400).end()
 		next(exception)
 		return
 	}
