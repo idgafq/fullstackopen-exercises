@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import Togglable from './Togglable'
 
 const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
-  const [showDetails, setShowDetials] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,10 +12,22 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
 
   const hideViewButton = () => {
     return (
-      <button onClick={() => setShowDetials(!showDetails)}>
+      <button onClick={() => setShowDetails(!showDetails)}>
         {showDetails? 'hide' : 'view'}
       </button>
     )
+  }
+
+  const handleLike = async (event) => {
+    event.preventDefault()
+    await updateBlog({ ...blog, likes: blog.likes + 1 })
+  }
+
+  const handleDelete = async (event) => {
+    event.preventDefault()
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await deleteBlog(blog.id)
+    }
   }
 
   const likeButton = () => {
@@ -35,20 +46,8 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
     )
   }
 
-  const handleLike = async (event) => {
-    event.preventDefault()
-    await updateBlog({ ...blog, likes: blog.likes + 1 })
-  }
-
-  const handleDelete = async (event) => {
-    event.preventDefault()
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await deleteBlog(blog.id)
-    }
-  }
-
   return (
-    <div style={blogStyle}>
+    <li className='blog' style={blogStyle}>
       {blog.title} {blog.author} {hideViewButton()}
       {showDetails &&
           <p>
@@ -58,7 +57,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
             {user.username === blog.user.username && deleteButton()}
           </p>
       }
-    </div>
+    </li>
   )
 }
 
