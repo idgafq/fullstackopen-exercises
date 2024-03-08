@@ -41,7 +41,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    setSortedBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    setSortedBlogs([...blogs].sort((a, b) => b.likes - a.likes))
   }, [blogs])
 
   const handleLogin = async (event) => {

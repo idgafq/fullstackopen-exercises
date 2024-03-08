@@ -52,7 +52,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       {showDetails &&
           <p>
             {blog.url}<br />
-            likes {blog.likes} {likeButton()}<br />
+            <span className='likes'>likes {blog.likes}</span>{likeButton()}<br />
             {blog.user.name}<br />
             {user.username === blog.user.username && deleteButton()}
           </p>
