@@ -9,7 +9,6 @@ const AnecdoteForm = () => {
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: (newAnecdote) => {
-      console.log(newAnecdote)
       queryClient.setQueryData(['anecdotes'], (oldAnecdotes) => oldAnecdotes.concat(newAnecdote))
       notificationDispatch({ type: 'SET_NOTIFICATION', payload: `added ${newAnecdote.content}`})
       setTimeout(() => notificationDispatch({ type: 'CLEAR_NOTIFICATION' }), 5000)
