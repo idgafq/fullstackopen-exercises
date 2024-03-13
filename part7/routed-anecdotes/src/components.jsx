@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useField } from './hooks'
 
-export const AnecdoteList = ({ anecdotes }) => (
+const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
@@ -14,7 +14,7 @@ export const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-export const Anecdote = ({ anecdote }) => {
+const Anecdote = ({ anecdote }) => {
   return (
     <div>
       <h2>{anecdote.content} by {anecdote.author}</h2>
@@ -24,7 +24,7 @@ export const Anecdote = ({ anecdote }) => {
   )
 }
 
-export const About = () => (
+const About = () => (
   <div>
     <h2>About anecdote app</h2>
     <p>According to Wikipedia:</p>
@@ -38,7 +38,7 @@ export const About = () => (
   </div>
 )
 
-export const Footer = () => (
+const Footer = () => (
   <div>
     Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
 
@@ -46,22 +46,31 @@ export const Footer = () => (
   </div>
 )
 
-export const CreateNew = ({ addNew }) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+const CreateNew = ({ addNew }) => {
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const navigate = useNavigate()
+
+  const minusReset = ({ reset, ...otherFs }) => otherFs
 
   const handleSubmit = (e) => {
     e.preventDefault()
     addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
+  }
+
+  const resetAll = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -70,19 +79,20 @@ export const CreateNew = ({ addNew }) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...minusReset(content)} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...minusReset(author)} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info' {...minusReset(info)} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button><button onClick={resetAll}>reset</button>
       </form>
     </div>
   )
-
 }
+
+export { AnecdoteList, Anecdote, About, Footer, CreateNew }
