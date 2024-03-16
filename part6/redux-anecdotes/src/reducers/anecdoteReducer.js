@@ -6,7 +6,7 @@ const initialState = []
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState,
-  reducers:{
+  reducers: {
     updateAnecdote(state, action) {
       return state.map((a) => a.id !== action.payload.id ? a : action.payload)
     },
@@ -41,4 +41,5 @@ export const voteFor = (anecdote) => {
     dispatch(updateAnecdote(resData))
   }
 }
+
 export default anecdoteSlice.reducer
