@@ -102,7 +102,7 @@ const typeDefs = `
     title: String!
     published: Int!
     author: String!
-    genres: [String!]
+    genres: [String!]!
     id: ID!
   }
 
