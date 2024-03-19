@@ -8,9 +8,7 @@ const Authors = (props) => {
   let authors = []
 
   const result = useQuery(ALL_AUTHORS)
-  const [ setBirthyear ] = useMutation(SET_BIRTHYEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
-  })
+  const [ setBirthyear ] = useMutation(SET_BIRTHYEAR)
 
   const submit = (event) => {
     event.preventDefault()

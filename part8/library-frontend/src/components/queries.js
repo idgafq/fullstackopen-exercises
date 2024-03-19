@@ -6,6 +6,7 @@ query {
     name
     born
     bookCount
+    id
   }
 }
 `
@@ -42,5 +43,7 @@ mutation setBirthYear($name: String!, $setBornTo: Int!) {
     name
     born
     bookCount
+    id
   }
-}`
+}
+`
