@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client'
-import { ALL_AUTHORS, SET_BIRTHYEAR } from './queries'
+import { ALL_AUTHORS, SET_BIRTHYEAR } from '../queries'
 import { useState } from 'react'
 
 const Authors = (props) => {
@@ -8,11 +8,21 @@ const Authors = (props) => {
   let authors = []
 
   const result = useQuery(ALL_AUTHORS)
-  const [ setBirthyear ] = useMutation(SET_BIRTHYEAR)
+  const [setBirthyear] = useMutation(SET_BIRTHYEAR, {
+    onError: (error) => console.log(error),
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+        return {
+          allAuthors: allAuthors.map((a) => a.id !== response.data.editAuthor.id ? a : response.data.editAuthor)
+        }
+      })
+    }
+  })
 
   const submit = (event) => {
     event.preventDefault()
     setBirthyear({ variables: { name, setBornTo: parseInt(year) } })
+    setYear('')
   }
 
 
@@ -24,11 +34,9 @@ const Authors = (props) => {
     return <div>loading</div>
   }
 
-  if (result.data.allAuthors) {
-    authors = result.data.allAuthors
-    if (authors.length > 0 && name === '') {
-      setName(authors[0].name)
-    }
+  authors = result.data.allAuthors
+  if (name === '' && authors.length > 0) {
+    setName(authors[0].name)
   }
 
   return (
