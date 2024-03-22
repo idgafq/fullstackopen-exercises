@@ -1,6 +1,7 @@
-import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { useQuery, useSubscription } from '@apollo/client'
+import { ALL_BOOKS, ALL_AUTHORS, BOOK_ADDED } from '../queries'
 import { useEffect, useState } from 'react'
+import { uniqById } from '../utils/uniqById'
 
 const Books = (props) => {
   const [genre, setGenre] = useState(null)
@@ -8,6 +9,33 @@ const Books = (props) => {
 
   const allResult = useQuery(ALL_BOOKS)
   const filteredResult = useQuery(ALL_BOOKS, { variables: { genre } })
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const bookAdded = data.data.bookAdded
+      window.alert(`${bookAdded.title} by ${bookAdded.author.name} was added`)
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: uniqById(allBooks.concat(bookAdded)),
+        }
+      })
+      client.cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+        return {
+          allAuthors: uniqById(allAuthors.concat(bookAdded.author))
+        }
+      })
+      for (const genre of bookAdded.genres) {
+        if (client.cache.readQuery({ query: ALL_BOOKS, variables: { genre } })) {
+          client.cache.updateQuery({ query: ALL_BOOKS, variables: { genre } }, ({ allBooks }) => {
+            return  {
+              allBooks: uniqById(allBooks.concat(bookAdded))
+            }
+          })
+        }
+      }
+    }
+  })
 
   useEffect(() => {
     if (allResult.data) {

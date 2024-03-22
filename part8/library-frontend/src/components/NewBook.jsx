@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useApolloClient, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../queries'
+import { uniqById } from '../utils/uniqById'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -9,28 +10,28 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const client = useApolloClient()
-
   const [ createBook ] = useMutation(CREATE_BOOK, {
     onError: (error) => console.log(error),
     update: (cache, response) => {
       cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
         return {
-          allBooks: allBooks.concat(response.data.addBook)
+          allBooks: uniqById(allBooks.concat(response.data.addBook))
         }
       })
       cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
         return {
-          allAuthors: allAuthors.find((author) => author.id === response.data.addBook.author.id) 
-            ? allAuthors 
-            : allAuthors.concat(response.data.addBook.author)
+          allAuthors: uniqById(allAuthors.concat(response.data.addBook.author))
         }
       })
-    },
-    onCompleted: (data) => {
-      client.refetchQueries({
-        include: data.addBook.genres.map((genre) => ({ query: ALL_BOOKS, variables: { genre } }))
-      })
+      for (const genre of response.data.addBook.genres) {
+        if (cache.readQuery({ query: ALL_BOOKS, variables: { genre } })) {
+          cache.updateQuery({ query: ALL_BOOKS, variables: { genre } }, ({ allBooks }) => {
+            return  {
+              allBooks: uniqById(allBooks.concat(response.data.addBook))
+            }
+          })
+        }
+      }
     }
   })
 
