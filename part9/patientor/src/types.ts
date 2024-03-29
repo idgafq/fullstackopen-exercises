@@ -12,7 +12,7 @@ interface BaseEntry {
   description: string;
 }
 
-export interface HospitalEntry extends BaseEntry {
+interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge?: {
     date: string;
@@ -20,7 +20,7 @@ export interface HospitalEntry extends BaseEntry {
   }
 }
 
-export interface OccupationalHealthcareEntry extends BaseEntry{
+interface OccupationalHealthcareEntry extends BaseEntry{
   type: "OccupationalHealthcare",
   employerName: string;
   sickLeave?: {
@@ -46,11 +46,11 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
-  // Define special omit for unions
-  type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 
-  // Define Entry without the 'id' property
-  export type NewEntry = UnionOmit<Entry, 'id'>;
+// Define Entry without the 'id' property
+export type NewEntry = UnionOmit<Entry, 'id'>;
 
 export enum Gender {
   Male = 'male',
@@ -70,4 +70,10 @@ export interface Patient {
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
-export type NewPatient = Omit<Patient, 'id' | 'entries'>;
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export enum EntryFormat {
+  Hospital = "hospital",
+  Occupational = "occupational",
+  Health = "health",
+}
