@@ -1,3 +1,6 @@
 [submodule "part3"]
 	path = part3
 	url = https://github.com/idgafq/fullstackopen-part3
+[submodule "part10"]
+	path = part10
+	url = https://github.com/idgafq/fullstackopen-part10
