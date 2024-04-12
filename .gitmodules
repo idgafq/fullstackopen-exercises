@@ -4,3 +4,6 @@
 [submodule "part10"]
 	path = part10
 	url = https://github.com/idgafq/fullstackopen-part10
+[submodule "part11"]
+	path = part11
+	url = https://github.com/idgafq/full-stack-open-pokedex
